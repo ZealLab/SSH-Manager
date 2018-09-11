@@ -1,10 +1,11 @@
 ﻿#requires -version 2
 <#
 .SYNOPSIS
-  SSH Management Script. Allows enterprise scale organized SSH user management.
+  SSH Management Script. Allows large scale organized SSH user management.
 .DESCRIPTION
-  Stores user information in powershell config file. Located C:\Scripts\Config\sshmgt.psd1
-  This script requires Posh-SSH
+  SSH-Manager will remember assosiations of usernames and ipaddresses.
+  SSH-Manager stores user information in powershell config file. Located C:\Scripts\Config\sshmgt.psd1
+  SSH-Manager requires Posh-SSH
 .PARAMETER <Parameter_Name>
     -u UserName is the User this command is being sent to.
     -c Command is the Command being sent
@@ -30,8 +31,6 @@ Param(
     [Parameter(Mandatory=$true)][string]$Command
     )
 
-$ErrorActionPreference = "Continue"
-
 
 ################
 # Declarations #
@@ -41,6 +40,14 @@ $ErrorActionPreference = "Continue"
 $cfg = 'C:\Scripts\Config'
 
 # If Configuration file not present. Create with Administrator credentials.
+if ($(Test-Path -Path 'C:\Scripts\') -eq ($false))
+    {
+    New-Item -Path 'C:\' -Name 'Scripts' -ItemType Directory
+    }
+if ($(Test-Path -Path 'C:\Scripts\Config\') -eq ($false))
+    {
+    New-Item -Path 'C:\Scripts\' -Name 'Config' -ItemType Directory
+    }
 if ($(Test-Path -Path $cfg\sshmgt.psd1) -eq ($false))
     {
     [string]$admin = $(Read-Host -Prompt "Please enter the Administrator account [Administrator]")
